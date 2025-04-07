@@ -11,12 +11,12 @@ datasource db {
 }
 
 enum Category {
-  FOOD
-  TRANSPORT
-  ENTERTAINMENT
-  UTILITIES
-  HEALTH
-  OTHER
+  FOOD 
+  TRANSPORT 
+  ENTERTAINMENT 
+  UTILITIES 
+  HEALTH 
+  OTHER 
 }
 
 model Expense {
@@ -24,7 +24,7 @@ model Expense {
   name      String
   category  Category
   amount    Float
-  date      String
+  date      DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

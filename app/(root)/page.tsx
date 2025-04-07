@@ -1,24 +1,13 @@
-export default async function ExpensesPage() {
-  const res = await fetch("http://localhost:3000/api/expenses", {
-    cache: "no-store",
-  });
+import ExpenseForm from "@/components/ExpenseForm";
+import ExpensesList from "@/components/ExpensesList";
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch expenses");
-  }
-
-  // Ensure the body is read only once
-  const { expenses } = await res.json();
-
+export default function ExpensesPage() {
   return (
     <div>
-      <h1>All Expenses</h1>
+      <h1 className="text-center text-3xl my-4">All Expenses</h1>
       <ul>
-        {expenses.map((expense: Expense) => (
-          <li key={expense.id}>
-            {expense.name}: ${expense.amount} ({expense.category})
-          </li>
-        ))}
+        <ExpensesList />
+        <ExpenseForm />
       </ul>
     </div>
   );

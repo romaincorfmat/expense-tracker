@@ -8,30 +8,37 @@ export async function GET() {
     },
   });
 
-  return NextResponse.json({
-    expenses,
-    success: true,
-  });
+  return NextResponse.json(JSON.parse(JSON.stringify(expenses))); // Return array directly
 }
 
 export async function POST(request: Request) {
-  const { name, amount, category, date } = await request.json();
+  const { name, amount, category } = await request.json();
+
+  if (!name || !amount || !category) {
+    return NextResponse.json(
+      { success: false, message: "All fields are required!" },
+      { status: 400 }
+    );
+  }
 
   try {
     const expense = await prisma.expense.create({
       data: {
         name,
-        amount,
+        amount: parseFloat(amount),
         category,
-        date: new Date(date).toISOString(),
+        date: new Date(),
       },
     });
 
-    return NextResponse.json({
-      success: true,
-      message: "Expense created successfully",
-      expense,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Expense created successfully",
+        expense,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     return NextResponse.json(
       {
