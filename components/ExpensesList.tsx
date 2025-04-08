@@ -1,15 +1,17 @@
 "use client";
 import { useExpenses } from "@/hooks/useExpenses";
-import { formatDate } from "@/lib/utils";
+import { cn, formatCurrency, formatDate } from "@/lib/utils";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { useDeleteExpense } from "@/hooks/useDeleteExpense";
+import { useSearchParams } from "next/navigation";
 
 const ExpensesList = () => {
   const containerClassName =
-    "max-w-xl mx-auto border border-gray-300 rounded-lg p-4 shadow-md";
-
-  const { data: expenses, isLoading, error } = useExpenses();
+    "min-w-md w-full mx-auto border border-gray-300 rounded-lg p-4 shadow-md";
+  const searchParams = useSearchParams();
+  const name = searchParams.get("name") || "";
+  const { data: expenses, isLoading, error } = useExpenses(name);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const { mutate: deleteExpense, error: deleteError } = useDeleteExpense();
@@ -34,21 +36,30 @@ const ExpensesList = () => {
     return <div className={containerClassName}>No expenses found</div>;
 
   return (
-    <div className="max-w-xl mx-auto border border-gray-300 rounded-lg p-4 shadow-md">
+    <div className=" min-w-md w-full mx-auto border border-gray-300 rounded-lg p-4 shadow-md">
       <ul className="flex flex-col gap-3">
         {expenses.map((expense: Expense) => (
           <div
             key={expense.id}
             className="flex flex-col gap-2 border shadow-md p-3 rounded-sm"
           >
-            <li className="grid grid-cols-4 max-md:grid-cols-2 gap-2 ">
-              <p> {expense.name}:</p>
-              <p>{expense.amount}$</p>
-              <p>({expense.category})</p>
-              <p>{formatDate(expense.date)}</p>
+            <li className={"grid grid-cols-4 max-md:grid-cols-2 gap-2 "}>
+              <p
+                className={cn(
+                  expense.transactionType === "INCOME"
+                    ? "bg-green-300"
+                    : "bg-red-300",
+                  "text-center font-semibold text-gray-950 rounded-md p-2 px-3 truncate line-clamp-1 overflow-x-scroll custom-scrollbar  "
+                )}
+              >
+                {expense.name}
+              </p>
+              <p className="p-1 font-bold">{formatCurrency(expense.amount)}$</p>
+              <p className="p-1">({expense.category})</p>
+              <p className="p-1">{formatDate(expense.date)}</p>
             </li>
             <Button
-              variant="destructive"
+              variant="outline"
               className="min-w-26 max-w-38"
               onClick={() => handleDelete(expense)}
               disabled={deletingId === expense.id}

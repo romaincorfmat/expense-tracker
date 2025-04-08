@@ -1,8 +1,21 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
+  console.log("Request URL:", request.url);
+  const { searchParams } = new URL(request.url);
+  console.log("searchParams", searchParams);
+  const name = searchParams.get("name") || "";
+  console.log("name", name);
+
   const expenses = await prisma.expense.findMany({
+    where: name
+      ? {
+          name: {
+            contains: name,
+          },
+        }
+      : undefined,
     orderBy: {
       createdAt: "desc",
     },
@@ -12,7 +25,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { name, amount, category } = await request.json();
+  const { name, amount, category, transactionType } = await request.json();
 
   if (!name || !amount || !category) {
     return NextResponse.json(
@@ -27,6 +40,7 @@ export async function POST(request: Request) {
         name,
         amount: parseFloat(amount),
         category,
+        transactionType,
         date: new Date(),
       },
     });

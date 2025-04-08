@@ -11,21 +11,26 @@ datasource db {
 }
 
 enum Category {
-  FOOD 
-  TRANSPORT 
-  ENTERTAINMENT 
-  UTILITIES 
-  HEALTH 
-  OTHER 
+  FOOD
+  TRANSPORT
+  ENTERTAINMENT
+  UTILITIES
+  HEALTH
+  OTHER
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
 }
 
 model Expense {
-  id        Int      @id @default(autoincrement())
-  name      String
-  category  Category
-  amount    Float
-  date      DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              Int             @id @default(autoincrement())
+  name            String
+  category        Category
+  amount          Float
+  transactionType TransactionType @default(EXPENSE)
+  date            DateTime
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 }
-
