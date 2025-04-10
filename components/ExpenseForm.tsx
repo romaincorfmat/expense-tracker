@@ -22,6 +22,8 @@ import { useState } from "react";
 import { useCreateExpense } from "@/hooks/useCreateExpense";
 import { toast } from "sonner";
 import { Category, TransactionType } from "@prisma/client";
+import { useModalStore } from "@/stores/useModalStore";
+import { X } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -33,6 +35,7 @@ const formSchema = z.object({
 });
 
 const ExpenseForm = () => {
+  const { closeModal } = useModalStore();
   const [selectedCategory, setSelectedCategory] = useState<Category>(
     Category.OTHER
   );
@@ -57,6 +60,7 @@ const ExpenseForm = () => {
     mutate(data, {
       onSuccess: () => {
         toast.success("Expense created successfully");
+        closeModal();
         form.reset();
         setSelectedCategory(Category.OTHER);
         setSelectedTranscationType(TransactionType.EXPENSE);
@@ -70,11 +74,16 @@ const ExpenseForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 min-w-md w-full mx-auto border border-gray-300 rounded-lg p-4 shadow-md"
+        className="space-y-8 w-full mx-auto "
       >
-        <h1 className="text-xl text-center text-emerald-400 font-semibold">
-          Add an expense
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="flex-1 text-xl text-center text-emerald-400 font-semibold">
+            Add an expense
+          </h1>
+          <Button variant="ghost" onClick={closeModal} className="p-0  m-0  ">
+            <X />
+          </Button>
+        </div>
         <FormField
           control={form.control}
           name="name"
@@ -216,7 +225,7 @@ const ExpenseForm = () => {
           />
         </div>
 
-        <Button type="submit">
+        <Button type="submit" className="w-full">
           {/* {isLoading ? "Saving..." : "Create Expense"} */}
           Submit
         </Button>

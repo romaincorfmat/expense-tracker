@@ -1,21 +1,25 @@
 import { prisma } from "@/lib/prisma";
+import { TransactionType } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  console.log("Request URL:", request.url);
   const { searchParams } = new URL(request.url);
-  console.log("searchParams", searchParams);
   const name = searchParams.get("name") || "";
-  console.log("name", name);
+  const transactionType = searchParams.get("transactionType") || "";
 
   const expenses = await prisma.expense.findMany({
-    where: name
-      ? {
-          name: {
-            contains: name,
-          },
-        }
-      : undefined,
+    where: {
+      ...(name && {
+        name: {
+          contains: name,
+        },
+      }),
+      ...(transactionType && {
+        transactionType: {
+          equals: transactionType as TransactionType, // Cast to the expected enum type
+        },
+      }),
+    },
     orderBy: {
       createdAt: "desc",
     },

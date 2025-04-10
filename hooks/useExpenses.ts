@@ -1,9 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 
-const fetchExpenses = async (name?: string) => {
+const fetchExpenses = async (name?: string, transactionType?: string) => {
   const url = new URL("http://localhost:3000/api/expenses");
   if (name) {
     url.searchParams.append("name", name);
+  }
+  if (transactionType) {
+    url.searchParams.append("transactionType", transactionType);
   }
   const res = await fetch(url.toString());
 
@@ -13,9 +16,9 @@ const fetchExpenses = async (name?: string) => {
   return res.json();
 };
 
-export function useExpenses(name?: string) {
+export function useExpenses(name?: string, transactionType?: string) {
   return useQuery<Expense[]>({
-    queryKey: ["expenses", name],
-    queryFn: () => fetchExpenses(name),
+    queryKey: ["expenses", name, transactionType],
+    queryFn: () => fetchExpenses(name, transactionType),
   });
 }
