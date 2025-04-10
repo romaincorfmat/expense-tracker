@@ -5,7 +5,9 @@ import Modal from "@/components/Modal";
 import ModalTrigger from "@/components/ModalTrigger";
 import Search from "@/components/Search/Search";
 
-export default function ExpensesPage() {
+export default async function ExpensesPage({ searchParams }: RouteParams) {
+  const { name, transactionType } = await searchParams;
+
   return (
     <div className="flex items-center justify-center min-h-screen w-screen bg-gray-100">
       <div className="flex flex-col min-h-screen gap-4 w-full max-w-md md:max-w-2xl bg-white shadow-md p-4 ">
@@ -16,10 +18,10 @@ export default function ExpensesPage() {
             title={"Add New Transaction"}
             modalContent={<ExpenseForm />}
           />
-          {/* <AddTansaction /> */}
         </div>
         <Search />
-        <ExpensesList />
+
+        <ExpensesList name={name} transactionType={transactionType} />
         <Modal />
       </div>
     </div>

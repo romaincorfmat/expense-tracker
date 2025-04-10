@@ -14,7 +14,7 @@ import { Ellipsis, Trash2Icon } from "lucide-react";
 const DeleteExpenseButton = ({ expenseId }: { expenseId: number }) => {
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  const { mutate: deleteExpense, error: deleteError } = useDeleteExpense();
+  const { mutate: deleteExpense } = useDeleteExpense();
 
   const handleDelete = (expenseId: number) => {
     if (expenseId) {

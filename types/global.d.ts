@@ -6,3 +6,8 @@ interface Expense {
   transactionType: "INCOME" | "EXPENSE";
   date: Date;
 }
+
+interface RouteParams {
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string>>;
+}

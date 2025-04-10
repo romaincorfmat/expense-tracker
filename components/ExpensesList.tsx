@@ -1,17 +1,20 @@
 "use client";
 import { useExpenses } from "@/hooks/useExpenses";
 import React from "react";
-// import { useDeleteExpense } from "@/hooks/useDeleteExpense";
-import { useSearchParams } from "next/navigation";
+
 import ExpenseCard from "./ExpenseCard";
 import { Loader2 } from "lucide-react";
 
-const ExpensesList = () => {
+const ExpensesList = ({
+  name,
+  transactionType,
+}: {
+  name: string;
+  transactionType: string;
+}) => {
   const containerClassName =
     "w-full mx-auto border border-gray-300 rounded-lg p-4 shadow-md";
-  const searchParams = useSearchParams();
-  const name = searchParams.get("name") || "";
-  const transactionType = searchParams.get("transactionType") || "";
+
   const {
     data: expenses,
     isLoading,
@@ -28,8 +31,10 @@ const ExpensesList = () => {
         </div>
       </div>
     );
+
   if (error)
     return <div className={containerClassName}>Error: {error.message}</div>;
+
   if (!expenses || expenses.length === 0)
     return <div className={containerClassName}>No expenses found</div>;
 
